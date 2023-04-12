@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,12 +21,23 @@ class Selection extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
+            Obx(
+            () => 
+            imageController.isPresent.value 
+            ? Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black),
+              ),
+              child: Image.file(
+                  File(imageController.temporaryImage.value.path),
+                  scale: 6,
+                ),
+            )
+            : Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.black),
                 color: Colors.grey[200]
               ),
-              // color: Colors.grey,
               width: 200,
               height: 200,
               child: Center(
@@ -36,9 +49,9 @@ class Selection extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
+            )),
             const SizedBox(
-              height: 70,
+              height: 20,
             ),
             Column(
               children: [
@@ -73,11 +86,47 @@ class Selection extends StatelessWidget {
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
       backgroundColor: const Color.fromARGB(255, 218, 189, 150),
+      floatingActionButton: Obx(() => imageController.isPresent.value ? Padding(
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: FloatingActionButton(
+                onPressed: () async {
+                  try{ 
+                  var response = await imageController.predictImage();
+                  Get.defaultDialog(
+                    titlePadding: EdgeInsets.all(20),
+                    title: "Prediction Accuracy: ${response.accuracy}",
+                    middleText: response.type,
+                    confirm: TextButton(
+                      onPressed: (){
+                         Get.back();
+                      },
+                      child: Text("Ok"),
+                    )
+                  );
+                  } catch(e){
+                    Get.defaultDialog(
+                    titlePadding: EdgeInsets.all(20),
+                    title: e.toString(),
+                    middleText: "Please report this issue",
+                    cancel: TextButton(
+                      onPressed: (){
+                         Get.back();
+                      },
+                      child: Text("Ok"),
+                    )
+                  );
+                  }
+                },
+                backgroundColor: Color.fromARGB(255, 73, 52, 44),
+                tooltip: "Classify image",
+                child: Icon(Icons.image_search_outlined),
+              ),
+            ): Container()),
     );
   }
 }
