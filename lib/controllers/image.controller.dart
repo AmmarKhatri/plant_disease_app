@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 class ImageController extends GetxController {
   var isPresent = false.obs;
   var temporaryImage = XFile("").obs;
-  
+  var isLoading = false.obs;
   Future pickImage(ImageSource source) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
@@ -24,6 +24,7 @@ class ImageController extends GetxController {
   }
 
   Future<PredictResponse> predictImage() async {
+    isLoading.value = true;
     final url = Uri.parse('$site/predict');
     final file = await http.MultipartFile.fromPath('file', temporaryImage.value.path);
     final request = http.MultipartRequest('POST', url)
@@ -32,8 +33,10 @@ class ImageController extends GetxController {
     final responseData = await response.stream.bytesToString();
     if (response.statusCode == 201) {
       var res = PredictResponse.fromJson(json.decode(responseData));
+      isLoading.value = false;
       return res;
     } else {
+      isLoading.value = false;
       throw Exception('Error uploading file');
     }
   }

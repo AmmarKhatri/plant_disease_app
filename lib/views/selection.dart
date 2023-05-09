@@ -24,13 +24,11 @@ class Selection extends StatelessWidget {
             Obx(
             () => 
             imageController.isPresent.value 
-            ? Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-              ),
+            ? SizedBox(
+              width: 200,
+              height: 200,
               child: Image.file(
                   File(imageController.temporaryImage.value.path),
-                  scale: 6,
                 ),
             )
             : Container(
@@ -66,8 +64,8 @@ class Selection extends StatelessWidget {
                   ),
                   style: TextButton.styleFrom(
                     elevation: 5,
-                    foregroundColor: Color.fromARGB(255, 240, 231, 227),
-                    backgroundColor: Color.fromARGB(176, 184, 86, 48)
+                    foregroundColor: const Color.fromARGB(255, 240, 231, 227),
+                    backgroundColor: const Color.fromARGB(176, 184, 86, 48)
                   ),
                 ),
                 ElevatedButton.icon(
@@ -81,8 +79,8 @@ class Selection extends StatelessWidget {
                   ),
                   style: TextButton.styleFrom(
                     elevation: 5,
-                    foregroundColor: Color.fromARGB(255, 240, 231, 227),
-                    backgroundColor: Color.fromARGB(176, 184, 86, 48)
+                    foregroundColor: const Color.fromARGB(255, 240, 231, 227),
+                    backgroundColor: const Color.fromARGB(176, 184, 86, 48)
                   ),
                 ),
               ],
@@ -92,7 +90,7 @@ class Selection extends StatelessWidget {
       ),
       backgroundColor: const Color.fromARGB(255, 218, 189, 150),
       floatingActionButton: Obx(() => imageController.isPresent.value ? Padding(
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
               child: FloatingActionButton(
                 onPressed: () async {
                   try{ 
@@ -105,26 +103,28 @@ class Selection extends StatelessWidget {
                       onPressed: (){
                          Get.back();
                       },
-                      child: Text("Ok"),
+                      child: const Text("Ok"),
                     )
                   );
                   } catch(e){
                     Get.defaultDialog(
-                    titlePadding: EdgeInsets.all(20),
+                    titlePadding: const EdgeInsets.all(20),
                     title: e.toString(),
                     middleText: "Please report this issue",
                     cancel: TextButton(
                       onPressed: (){
                          Get.back();
                       },
-                      child: Text("Ok"),
+                      child: const Text("Ok"),
                     )
                   );
                   }
                 },
-                backgroundColor: Color.fromARGB(255, 73, 52, 44),
+                backgroundColor: const Color.fromARGB(255, 73, 52, 44),
                 tooltip: "Classify image",
-                child: Icon(Icons.image_search_outlined),
+                child: imageController.isLoading.value ? const CircularProgressIndicator(
+                  color: Colors.white,
+                ) : const Icon(Icons.image_search_outlined),
               ),
             ): Container()),
     );
